@@ -25,6 +25,8 @@ describe('Block', () => {
 
         block.refine({ height: 1, previousBlockHash: '0' });
 
+        expect(block.height).toEqual(1);
+        expect(block.previousBlockHash).toEqual('0');
         expect(block.isRefined()).toBeTruthy();
         expect(block.hash.length).toEqual(64);
     });

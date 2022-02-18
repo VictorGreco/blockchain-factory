@@ -18,50 +18,30 @@ class Block {
     }
 
     calculateHash() {
-        try {
-            return SHA256(`${this.height}${JSON.stringify(this.body)}${this.timestamp}${this.previousBlockHash}`).toString();
-        } catch(error) {
-            console.error(error);
-        }
+        return SHA256(`${this.height}${JSON.stringify(this.body)}${this.timestamp}${this.previousBlockHash}`).toString();
     }
 
     isRefined() {
-        try {
-            return !!this.height && this.timestamp && this.previousBlockHash && this.hash && JSON.stringify(this.body);
-        } catch (error) {
-            console.error(error);
-        }
+        return !!this.height && this.timestamp && this.previousBlockHash && this.hash && JSON.stringify(this.body);
     }
 
     refine({ height, previousBlockHash }) {
-        try {
-            this.height = height || this.height;
-            this.previousBlockHash = previousBlockHash || this.previousBlockHash;
-            this.hash = this.calculateHash();
-        } catch(error) {
-            console.error(error);
-        }
+        this.height = height || this.height;
+        this.previousBlockHash = previousBlockHash || this.previousBlockHash;
+        this.hash = this.calculateHash();
     }
 
     getHeader() {
-        try {
-            return {
-                height: this.height,
-                timestamp: this.timestamp,
-                previousBlockHash: this.previousBlockHash,
-                hash: this.hash
-            };
-        } catch(error) {
-            console.error(error);
+        return {
+            height: this.height,
+            timestamp: this.timestamp,
+            previousBlockHash: this.previousBlockHash,
+            hash: this.hash
         }
     }
 
     getBody() {
-        try {
-            return this.body;
-        } catch(error) {
-            console.error(error);
-        }
+        return this.body;
     }
 }
 

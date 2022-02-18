@@ -1,4 +1,5 @@
 const Block = require('./block');
+const { GENESIS_BLOCK_DATA } = require('./constants');
 
 /* ===== Blockchain ===================================
 |  Class with a constructor for blockchain data model  |
@@ -19,44 +20,26 @@ class Blockchain {
     }
 
     createGenesisBlock() {
-        try {
-    
-            return this.createBlock("Thank you ❤️ to use Blockchain Factory for your project - Genesis Block");
-        } catch (error) {
-            console.error(error);
-        }
+        return this.createBlock(GENESIS_BLOCK_DATA);
     }
 
     createBlock(data) {
-        try {  
-            let newBlock = new Block(data);
+        let newBlock = new Block(data);
 
-            const height = this.getChainHeight();
-            const previousBlockHash = this.getPreviousBlockHash({ height });
+        const height = this.getChainHeight();
+        const previousBlockHash = this.getPreviousBlockHash({ height });
 
-            newBlock.refine({ height, previousBlockHash });
-    
-            return newBlock;
-        } catch (error) {
-            console.error(error);
-        }
+        newBlock.refine({ height, previousBlockHash });
+
+        return newBlock;
     }
 
     addBlock(newBlock) {
-        try {  
-            this.chain.push(newBlock);
-
-        } catch (error) {
-            console.error(error);
-        }
+        this.chain.push(newBlock);
     }
 
     getPreviousBlockHash({ height }) {
-        try {
-            return this.chain[height - 1]?.hash || '0x';
-        } catch(error) {
-            console.error(error);
-        }
+        return this.chain[height - 1]?.hash || '0x';
     }
 
     getLatestBlock() {
@@ -64,40 +47,47 @@ class Blockchain {
     }
 
     getBlock({ height, hash, timestamp, body, previousBlockHash }) {
-        try {
-            if (height) {
-                return this.chain[height];
-            }
+        if (height) {
+            return this.chain.find(block => block.height === height);
+        }
 
-            if (hash) {
-                return this.chain.find(block => block.hash === hash);
-            }
+        if (hash) {
+            return this.chain.find(block => block.hash === hash);
+        }
 
-            if (timestamp) {
-                return this.chain.find(block => block.timestamp === timestamp);
-            }
+        if (timestamp) {
+            return this.chain.find(block => block.timestamp === timestamp);
+        }
 
-            if (body) {
-                return this.chain.find(block => JSON.stringify(block.body) === JSON.stringify(body));
-            }
+        if (body) {
+            return this.chain.find(block => JSON.stringify(block.body) === JSON.stringify(body));
+        }
 
-            if (previousBlockHash) {
-                return this.chain.find(block => block.previousBlockHash === previousBlockHash);
-            }
+        if (previousBlockHash) {
+            return this.chain.find(block => block.previousBlockHash === previousBlockHash);
+        }
+    }
 
-            throw new Error('Invalid block search criteria');
+    getBlocks({ containsHash, timestamp, body, bodyIncludes }) {
+        if (containsHash) {
+            return this.chain.filter(block => block.hash === containsHash || block.previousBlockHash === containsHash);
+        }
 
-        } catch (error) {
-            console.error(error);
+        if (timestamp) {
+            return this.chain.filter(block => block.timestamp === timestamp);
+        }
+
+        if (body) {
+            return this.chain.filter(block => JSON.stringify(block.body) === JSON.stringify(body));
+        }
+
+        if (bodyIncludes) {
+            return this.chain.filter(block => JSON.stringify(block.body).indexOf(bodyIncludes) > -1);
         }
     }
 
     getChainHeight() {
-        try {
-            return this.chain.length;
-        } catch(error) {
-            console.error(error);
-        }
+        return this.chain.length;
     }
 }
 

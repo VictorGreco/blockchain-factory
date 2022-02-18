@@ -15,11 +15,29 @@ class Block {
         this.previousBlockHash = null;
         this.hash = null;
         this.body = body;
-    } 
+    }
 
     calculateHash() {
         try {
             return SHA256(`${this.height}${JSON.stringify(this.body)}${this.timestamp}${this.previousBlockHash}`).toString();
+        } catch(error) {
+            console.error(error);
+        }
+    }
+
+    isRefined() {
+        try {
+            return !!this.height && this.timestamp && this.previousBlockHash && this.hash && JSON.stringify(this.body);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    refine({ height, previousBlockHash }) {
+        try {
+            this.height = height || this.height;
+            this.previousBlockHash = previousBlockHash || this.previousBlockHash;
+            this.hash = this.calculateHash();
         } catch(error) {
             console.error(error);
         }

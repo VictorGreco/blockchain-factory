@@ -31,9 +31,10 @@ class Blockchain {
         try {  
             let newBlock = new Block(data);
 
-            newBlock.height = this.getChainHeight();
-            newBlock.previousBlockHash = this.getPreviousBlockHash(newBlock);
-            newBlock.hash = newBlock.calculateHash();
+            const height = this.getChainHeight();
+            const previousBlockHash = this.getPreviousBlockHash({ height });
+
+            newBlock.refine({ height, previousBlockHash });
     
             return newBlock;
         } catch (error) {
